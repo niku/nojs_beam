@@ -1,18 +1,14 @@
 defmodule NojsBeam do
-  @moduledoc """
-  Documentation for NojsBeam.
-  """
+  @port 8080
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> NojsBeam.hello
-      :world
-
-  """
-  def hello do
-    :world
+  def start(_type, _args) do
+    dispatch = :cowboy_router.compile([
+      {:_,
+       [
+         {"/", NojsBeam.ClockHandler, []}
+       ]
+      }
+    ])
+    {:ok, _} = :cowboy.start_http(:http, 100, [port: @port], [env: [dispatch: dispatch]])
   end
 end
